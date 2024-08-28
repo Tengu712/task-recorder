@@ -8,7 +8,7 @@ settings:
 targets:
   TaskRecorder:
     type: application
-    platform: iOS
+    platform: [macOS, iOS]
     sources:
       - Sources
     settings:
