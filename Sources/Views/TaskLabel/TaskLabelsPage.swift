@@ -6,15 +6,15 @@ struct TaskLabelsPage: View {
     var body: some View {
         NavigationStack {
             Form {
-                ForEach(self.modelData.labels.indices, id: \.self) { i in
+                ForEach(self.modelData.labels) { label in
                     NavigationLink {
-                        TaskLabelDetail(label: self.modelData.labels[i])
+                        TaskLabelDetail(label: label)
                     } label: {
                         HStack {
-                            TaskLabelBadge(label: self.modelData.labels[i])
+                            TaskLabelBadge(label: label)
                             Spacer()
                             Button {
-                                self.modelData.labels.remove(at: i)
+                                self.modelData.labels.removeAll(where: { $0.id == label.id })
                             } label: {
                                 Image(systemName: "trash")
                             }

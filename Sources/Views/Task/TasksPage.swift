@@ -16,11 +16,11 @@ struct TasksPage: View {
             Form {
                 Section(header: Text("Pending")) {
                     ViewOr(flag: self.pendings.isEmpty, alt: "No tasks pending.") {
-                        ForEach(self.pendings.indices, id: \.self) { i in
+                        ForEach(self.pendings) { task in
                             NavigationLink {
-                                TaskDetail(task: self.pendings[i])
+                                TaskDetail(task: task)
                             } label: {
-                                TaskRow(task: self.pendings[i])
+                                TaskRow(task: task)
                             }
                         }
                         .onMove(perform: self.move)
@@ -29,11 +29,11 @@ struct TasksPage: View {
 
                 Section(header: Text("Done")) {
                     ViewOr(flag: self.dones.isEmpty, alt: "No tasks have been done.") {
-                        ForEach(self.dones.indices, id: \.self) { i in
+                        ForEach(self.dones) { task in
                             NavigationLink {
-                                TaskDetail(task: self.dones[i])
+                                TaskDetail(task: task)
                             } label: {
-                                TaskRow(task: self.dones[i])
+                                TaskRow(task: task)
                             }
                         }
                         .onMove(perform: self.move)

@@ -4,7 +4,8 @@ import SwiftUI
 // NOTE: TaskLabelDetailで変更を監視するためにObservableObjectにする。
 //       TaskLabelDetailで変更がビューに反映されないのは、
 //       ModelDataで配列に格納しているために起こる謎仕様。
-class TaskLabel: ObservableObject {
+class TaskLabel: ObservableObject, Identifiable {
+    let id = UUID()
     @Published var title: String = "Label"
     @Published var color: Color = Color.gray
 }

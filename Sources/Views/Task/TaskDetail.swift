@@ -27,12 +27,12 @@ struct TaskDetail: View {
 
             Section(header: Text("Labels")) {
                 ViewOr(flag: self.task.labels.isEmpty, alt: "No labels attached.") {
-                    ForEach(self.task.labels.indices, id: \.self) { i in
+                    ForEach(self.task.labels) { label in
                         HStack {
-                            TaskLabelBadge(label: self.task.labels[i])
+                            TaskLabelBadge(label: label)
                             Spacer()
                             Button {
-                                self.task.labels.remove(at: i)
+                                self.task.labels.removeAll(where: { $0.id == label.id })
                             } label: {
                                 Image(systemName: "minus.circle")
                             }
@@ -44,12 +44,12 @@ struct TaskDetail: View {
 
             Section(header: Text("Unattached Labels")) {
                 ViewOr(flag: self.unattachedLabels.isEmpty, alt: "No labels available.") {
-                    ForEach(self.unattachedLabels.indices, id: \.self) { i in
+                    ForEach(self.unattachedLabels) { label in
                         HStack {
-                            TaskLabelBadge(label: self.unattachedLabels[i])
+                            TaskLabelBadge(label: label)
                             Spacer()
                             Button {
-                                self.task.labels.append(self.unattachedLabels[i])
+                                self.task.labels.append(label)
                             } label: {
                                 Image(systemName: "plus.circle")
                             }
