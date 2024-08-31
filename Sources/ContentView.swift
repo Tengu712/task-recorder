@@ -1,12 +1,11 @@
 import SwiftUI
 
 struct ContentView: View {
-    @Environment(ModelData.self) var modelData
+    @Environment(ModelData.self) private var modelData
 
     var body: some View {
         NavigationSplitView {
             List {
-                // Tasks
                 NavigationLink {
                     TasksPage()
                 } label: {
@@ -15,7 +14,7 @@ struct ContentView: View {
                         Text("Tasks")
                     }
                 }
-                // Labels
+
                 NavigationLink {
                     TaskLabelsPage()
                 } label: {
@@ -24,6 +23,7 @@ struct ContentView: View {
                         Text("Labels")
                     }
                 }
+
                 // TODO:
             }
             .scrollContentBackground(.hidden)

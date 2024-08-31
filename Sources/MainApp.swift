@@ -13,7 +13,7 @@ struct MainApp: App {
 #if os(macOS)
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 #endif
-    @State var modelData = loadModelData()
+    @State private var modelData = loadModelData()
 
     var body: some Scene {
         WindowGroup {

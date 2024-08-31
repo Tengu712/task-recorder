@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct TaskDetail: View {
-    @Environment(ModelData.self) var modelData
+    @Environment(ModelData.self) private var modelData
     @ObservedObject var task: Task
 
     private var unattachedLabels: [TaskLabel] {
