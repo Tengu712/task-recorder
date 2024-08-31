@@ -3,18 +3,40 @@ import SwiftUI
 struct TasksPage: View {
     @Environment(ModelData.self) var modelData
 
+    private var pendings: [Task] {
+        return self.modelData.tasks.filter({ n in !n.isDone})
+    }
+
+    private var dones: [Task] {
+        return self.modelData.tasks.filter({ n in n.isDone})
+    }
+
     var body: some View {
         NavigationStack {
-            List {
-                ForEach(self.modelData.tasks.indices, id: \.self) { i in
-                    NavigationLink {
-                        TaskDetail(task: self.modelData.tasks[i])
-                    } label: {
-                        TaskRow(task: self.modelData.tasks[i])
+            Form {
+                Section(header: Text("Pending")) {
+                    ForEach(self.pendings.indices, id: \.self) { i in
+                        NavigationLink {
+                            TaskDetail(task: self.pendings[i])
+                        } label: {
+                            TaskRow(task: self.pendings[i])
+                        }
                     }
+                    .onMove(perform: self.move)
                 }
-                .onMove(perform: self.move)
+
+                Section(header: Text("Done")) {
+                    ForEach(self.dones.indices, id: \.self) { i in
+                        NavigationLink {
+                            TaskDetail(task: self.dones[i])
+                        } label: {
+                            TaskRow(task: self.dones[i])
+                        }
+                    }
+                    .onMove(perform: self.move)
+                }
             }
+            .formStyle(.grouped)
         }
         .scrollContentBackground(.hidden)
         .navigationTitle("Tasks")
