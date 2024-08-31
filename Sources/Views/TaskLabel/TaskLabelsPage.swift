@@ -5,7 +5,7 @@ struct TaskLabelsPage: View {
 
     var body: some View {
         NavigationStack {
-            List {
+            Form {
                 ForEach(self.modelData.labels.indices, id: \.self) { i in
                     NavigationLink {
                         TaskLabelDetail(label: self.modelData.labels[i])
@@ -24,6 +24,7 @@ struct TaskLabelsPage: View {
                 }
                 .onMove(perform: self.move)
             }
+            .formStyle(.grouped)
         }
         .navigationTitle("Labels")
         .scrollContentBackground(.hidden)
