@@ -1,6 +1,7 @@
 #!/bin/zsh
 
 xcodebuild \
+  -quiet \
   -project TaskRecorder.xcodeproj \
   -scheme TaskRecorder_macOS \
   -derivedDataPath ./build/macOS \
