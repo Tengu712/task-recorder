@@ -1,28 +1,30 @@
 import SwiftUI
 
 struct TaskLabelsPage: View {
-    @Environment(ModelData.self) var modelData
+    @Environment(ModelData.self) private var modelData
 
     var body: some View {
         NavigationStack {
             Form {
-                ForEach(self.modelData.labels) { label in
-                    NavigationLink {
-                        TaskLabelDetail(label: label)
-                    } label: {
-                        HStack {
-                            TaskLabelBadge(label: label)
-                            Spacer()
-                            Button {
-                                self.modelData.labels.removeAll(where: { $0.id == label.id })
-                            } label: {
-                                Image(systemName: "trash")
+                List {
+                    ForEach(self.modelData.labels) { label in
+                        NavigationLink {
+                            TaskLabelDetail(label: label)
+                        } label: {
+                            HStack {
+                                TaskLabelBadge(label: label)
+                                Spacer()
+                                Button {
+                                    self.modelData.labels.removeAll(where: { $0.id == label.id })
+                                } label: {
+                                    Image(systemName: "trash")
+                                }
+                                .buttonStyle(PlainButtonStyle())
                             }
-                            .buttonStyle(PlainButtonStyle())
                         }
                     }
+                    .onMove(perform: self.move)
                 }
-                .onMove(perform: self.move)
             }
             .formStyle(.grouped)
         }
