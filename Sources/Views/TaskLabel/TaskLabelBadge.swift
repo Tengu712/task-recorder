@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct TaskLabelBadge: View {
-    let label: TaskLabel
+    @ObservedObject var label: TaskLabel
 
     var body: some View {
         Text(self.label.title)

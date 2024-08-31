@@ -17,8 +17,8 @@ struct TaskRow: View {
             Spacer()
 
             HStack {
-                ForEach(self.task.labels, id: \.self) { label in
-                    TaskLabelBadge(label: label)
+                ForEach(self.task.labels.indices, id: \.self) { i in
+                    TaskLabelBadge(label: self.task.labels[i])
                 }
             }
         }

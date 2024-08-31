@@ -15,6 +15,15 @@ struct ContentView: View {
                         Text("Tasks")
                     }
                 }
+                // Labels
+                NavigationLink {
+                    TaskLabelsPage()
+                } label: {
+                    HStack {
+                        Image(systemName: "tag.fill")
+                        Text("Labels")
+                    }
+                }
                 // TODO:
             }
             .scrollContentBackground(.hidden)

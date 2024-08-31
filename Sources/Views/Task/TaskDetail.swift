@@ -52,17 +52,18 @@ struct TaskDetail: View {
                         Text("No label available.")
                             .foregroundStyle(.secondary)
                             .frame(maxWidth: .infinity, alignment: .center)
-                    }
-                    ForEach(self.unattachedLabels, id: \.self) { label in
-                        HStack {
-                            TaskLabelBadge(label: label)
-                            Spacer()
-                            Button {
-                                self.task.labels.append(label)
-                            } label: {
-                                Image(systemName: "plus.circle")
+                    } else {
+                        ForEach(self.unattachedLabels.indices, id: \.self) { i in
+                            HStack {
+                                TaskLabelBadge(label: self.unattachedLabels[i])
+                                Spacer()
+                                Button {
+                                    self.task.labels.append(self.unattachedLabels[i])
+                                } label: {
+                                    Image(systemName: "plus.circle")
+                                }
+                                .buttonStyle(PlainButtonStyle())
                             }
-                            .buttonStyle(PlainButtonStyle())
                         }
                     }
                 }

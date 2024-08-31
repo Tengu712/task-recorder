@@ -1,5 +1,4 @@
 import Foundation
-import SwiftUI
 
 // NOTE: Environmentに利用するため@Observableマクロを適用する。
 @Observable
@@ -17,9 +16,6 @@ class ModelData {
 func loadModelData() -> ModelData {
     return ModelData(
         tasks: [],
-        labels: [
-            TaskLabel(title: "foo", color: .red),
-            TaskLabel(title: "bar", color: .blue),
-        ]
+        labels: []
     )
 }
