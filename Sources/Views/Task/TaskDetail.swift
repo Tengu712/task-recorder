@@ -27,11 +27,7 @@ struct TaskDetail: View {
                 }
 
                 Section(header: Text("Labels")) {
-                    if self.task.labels.isEmpty {
-                        Text("No label attached.")
-                            .foregroundStyle(.secondary)
-                            .frame(maxWidth: .infinity, alignment: .center)
-                    } else {
+                    ViewOr(flag: self.task.labels.isEmpty, alt: "No labels attached.") {
                         ForEach(self.task.labels.indices, id: \.self) { i in
                             HStack {
                                 TaskLabelBadge(label: self.task.labels[i])
@@ -48,11 +44,7 @@ struct TaskDetail: View {
                 }
 
                 Section(header: Text("Unattached Labels")) {
-                    if self.unattachedLabels.isEmpty {
-                        Text("No label available.")
-                            .foregroundStyle(.secondary)
-                            .frame(maxWidth: .infinity, alignment: .center)
-                    } else {
+                    ViewOr(flag: self.unattachedLabels.isEmpty, alt: "No labels available.") {
                         ForEach(self.unattachedLabels.indices, id: \.self) { i in
                             HStack {
                                 TaskLabelBadge(label: self.unattachedLabels[i])

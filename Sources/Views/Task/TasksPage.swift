@@ -15,25 +15,29 @@ struct TasksPage: View {
         NavigationStack {
             Form {
                 Section(header: Text("Pending")) {
-                    ForEach(self.pendings.indices, id: \.self) { i in
-                        NavigationLink {
-                            TaskDetail(task: self.pendings[i])
-                        } label: {
-                            TaskRow(task: self.pendings[i])
+                    ViewOr(flag: self.pendings.isEmpty, alt: "No tasks pending.") {
+                        ForEach(self.pendings.indices, id: \.self) { i in
+                            NavigationLink {
+                                TaskDetail(task: self.pendings[i])
+                            } label: {
+                                TaskRow(task: self.pendings[i])
+                            }
                         }
+                        .onMove(perform: self.move)
                     }
-                    .onMove(perform: self.move)
                 }
 
                 Section(header: Text("Done")) {
-                    ForEach(self.dones.indices, id: \.self) { i in
-                        NavigationLink {
-                            TaskDetail(task: self.dones[i])
-                        } label: {
-                            TaskRow(task: self.dones[i])
+                    ViewOr(flag: self.dones.isEmpty, alt: "No tasks have been done.") {
+                        ForEach(self.dones.indices, id: \.self) { i in
+                            NavigationLink {
+                                TaskDetail(task: self.dones[i])
+                            } label: {
+                                TaskRow(task: self.dones[i])
+                            }
                         }
+                        .onMove(perform: self.move)
                     }
-                    .onMove(perform: self.move)
                 }
             }
             .formStyle(.grouped)
