@@ -30,6 +30,15 @@ struct ContentView: View {
                         Text("Comments")
                     }
                 }
+
+                NavigationLink {
+                    RoutinesPage()
+                } label: {
+                    HStack {
+                        Image(systemName: "cup.and.saucer")
+                        Text("Routines")
+                    }
+                }
             }
             .scrollContentBackground(.hidden)
         } detail: {

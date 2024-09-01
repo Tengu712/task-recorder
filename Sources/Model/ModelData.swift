@@ -9,6 +9,7 @@ class ModelData: Encodable {
     var labels: [TaskLabel] = []
     var pendings: [Task] = []
     var dones: [Task] = []
+    var routines: [Task] = []
     var comments: String = ""
 
     func getLabel(id: UUID) -> TaskLabel {
@@ -63,6 +64,11 @@ class ModelData: Encodable {
 
         self.dones.removeAll()
         self.comments = ""
+        for routine in self.routines {
+            if !self.pendings.contains(where: { n in n.title == routine.title }) {
+                self.pendings.append(routine)
+            }
+        }
     }
 
     func save() {
@@ -121,6 +127,11 @@ func loadModelData() -> ModelData {
     if let dones = json["_dones"] as? [[String: Any]] {
         for n in dones {
             modelData.dones.append(Task.loadFrom(dict: n, labelDict: labelDict))
+        }
+    }
+    if let routines = json["_routines"] as? [[String: Any]] {
+        for n in routines {
+            modelData.routines.append(Task.loadFrom(dict: n, labelDict: labelDict))
         }
     }
     if let comments = json["_comments"] as? String {
