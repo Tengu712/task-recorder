@@ -7,9 +7,10 @@ class Task: ObservableObject, Identifiable, Encodable {
     let id = UUID()
     @Published var title: String = ""
     @Published var detail: String = ""
-    @Published var labels: [TaskLabel] = []
+    @Published var labelIds: [UUID] = []
 
-    static func loadFrom(dict: [String: Any]) -> Task {
+    // NOTE: TaskLabelの整合性を取るためにTaskLabel.idの新旧比較辞書を参照する。
+    static func loadFrom(dict: [String: Any], labelDict: [String: UUID]) -> Task {
         let task = Task()
         if let title = dict["title"] as? String {
             task.title = title
@@ -17,9 +18,11 @@ class Task: ObservableObject, Identifiable, Encodable {
         if let detail = dict["detail"] as? String {
             task.detail = detail
         }
-        if let labels = dict["labels"] as? [[String: Any]] {
-            for n in labels {
-                task.labels.append(TaskLabel.loadFrom(dict: n))
+        if let labelIds = dict["labelIds"] as? [String] {
+            for id in labelIds {
+                if let nid = labelDict[id] {
+                    task.labelIds.append(nid)
+                }
             }
         }
         return task

@@ -4,10 +4,18 @@ struct TaskDetail: View {
     @Environment(ModelData.self) private var modelData
     @ObservedObject var task: Task
 
+    private var attachedLabels: [TaskLabel] {
+        return self.modelData.labels.filter({ n in
+            self.task.labelIds.contains(where: { m in
+                m == n.id
+            })
+        })
+    }
+
     private var unattachedLabels: [TaskLabel] {
         return self.modelData.labels.filter({ n in
-            !self.task.labels.contains(where: { m in
-                m.id == n.id
+            !self.task.labelIds.contains(where: { m in
+                m == n.id
             })
         })
     }
@@ -26,13 +34,13 @@ struct TaskDetail: View {
             }
 
             Section(header: Text("Labels")) {
-                ViewOr(flag: self.task.labels.isEmpty, alt: "No labels attached.") {
-                    ForEach(self.task.labels) { label in
+                ViewOr(flag: self.attachedLabels.isEmpty, alt: "No labels attached.") {
+                    ForEach(self.attachedLabels) { label in
                         HStack {
                             TaskLabelBadge(label: label)
                             Spacer()
                             Button {
-                                self.task.labels.removeAll(where: { $0.id == label.id })
+                                self.task.labelIds.removeAll(where: { $0 == label.id })
                             } label: {
                                 Image(systemName: "minus.circle")
                             }
@@ -49,7 +57,7 @@ struct TaskDetail: View {
                             TaskLabelBadge(label: label)
                             Spacer()
                             Button {
-                                self.task.labels.append(label)
+                                self.task.labelIds.append(label.id)
                             } label: {
                                 Image(systemName: "plus.circle")
                             }

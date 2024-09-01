@@ -6,14 +6,13 @@ private let rootDirectory = NSHomeDirectory() + "/Documents/TaskRecorder"
 // NOTE: Environmentに利用するため@Observableマクロを適用する。
 @Observable
 class ModelData: Encodable {
-    var pendings: [Task]
-    var dones: [Task]
-    var labels: [TaskLabel]
+    var labels: [TaskLabel] = []
+    var pendings: [Task] = []
+    var dones: [Task] = []
 
-    init(pendings: [Task], dones: [Task], labels: [TaskLabel]) {
-        self.pendings = pendings
-        self.dones = dones
-        self.labels = labels
+    func getLabel(id: UUID) -> TaskLabel {
+        // NOTE: ロード時に整合性を取っているため!を付けて良い。
+        return self.labels.first(where: { n in n.id == id })!
     }
 
     func submit() {
@@ -35,10 +34,10 @@ class ModelData: Encodable {
                 }
             }
             // labels
-            if !task.labels.isEmpty {
+            if !task.labelIds.isEmpty {
                 data.append("    labels:\n".data(using: .utf8)!)
-                for label in task.labels {
-                    data.append("      - \(label.title)\n".data(using: .utf8)!)
+                for id in task.labelIds {
+                    data.append("      - \(self.getLabel(id: id).title)\n".data(using: .utf8)!)
                 }
             }
         }
@@ -76,7 +75,7 @@ class ModelData: Encodable {
 }
 
 func loadModelData() -> ModelData {
-    let modelData = ModelData(pendings: [], dones: [], labels: [])
+    let modelData = ModelData()
 
     // create directory
     if !fileManager.fileExists(atPath: rootDirectory) {
@@ -100,19 +99,20 @@ func loadModelData() -> ModelData {
         return modelData
     }
 
+    var labelDict = [String: UUID]()
+    if let labels = json["_labels"] as? [[String: Any]] {
+        for n in labels {
+            modelData.labels.append(TaskLabel.loadFrom(dict: n, labelDict: &labelDict))
+        }
+    }
     if let pendings = json["_pendings"] as? [[String: Any]] {
         for n in pendings {
-            modelData.pendings.append(Task.loadFrom(dict: n))
+            modelData.pendings.append(Task.loadFrom(dict: n, labelDict: labelDict))
         }
     }
     if let dones = json["_dones"] as? [[String: Any]] {
         for n in dones {
-            modelData.dones.append(Task.loadFrom(dict: n))
-        }
-    }
-    if let labels = json["_labels"] as? [[String: Any]] {
-        for n in labels {
-            modelData.labels.append(TaskLabel.loadFrom(dict: n))
+            modelData.dones.append(Task.loadFrom(dict: n, labelDict: labelDict))
         }
     }
     

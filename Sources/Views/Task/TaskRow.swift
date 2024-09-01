@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct TaskRow: View {
+    @Environment(ModelData.self) private var modelData
     @ObservedObject var task: Task
     @Binding var src: [Task]
     @Binding var dst: [Task]
@@ -20,8 +21,8 @@ struct TaskRow: View {
 
             Spacer()
 
-            ForEach(self.task.labels) { label in
-                TaskLabelBadge(label: label)
+            ForEach(self.task.labelIds, id: \.self) { id in
+                TaskLabelBadge(label: self.modelData.getLabel(id: id))
             }
 
             Button {

@@ -32,8 +32,13 @@ class TaskLabel: ObservableObject, Identifiable, Encodable {
         return COLOR_MAP[self.colorKey] ?? Color.gray
     }
 
-    static func loadFrom(dict: [String: Any]) -> TaskLabel {
+    // NOTE: TaskLabelの整合性を取るためにTaskLabel.idの新旧比較辞書を作成する。
+    //       labelDict: [旧: 新]
+    static func loadFrom(dict: [String: Any], labelDict: inout [String: UUID]) -> TaskLabel {
         let label = TaskLabel()
+        if let id = dict["id"] as? String {
+            labelDict[id] = label.id
+        }
         if let title = dict["title"] as? String {
             label.title = title
         }
