@@ -19,10 +19,19 @@ struct MainApp: App {
         WindowGroup {
             ContentView()
                 .environment(self.modelData)
+#if os(macOS)
                 // NOTE: ウィンドウが閉じられたときにmodelDataを保存する
                 .onReceive(NotificationCenter.default.publisher(for: NSWindow.willCloseNotification)) { _ in
                     self.modelData.save()
                 }
+#endif
+#if os(iOS)
+                // NOTE: アプリが非アクティブになったときにmodelDataを保存する
+                .onReceive(NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)) { _ in
+                    self.modelData.labels.append(TaskLabel())
+                    self.modelData.save()
+                }
+#endif
         }
     }
 }
