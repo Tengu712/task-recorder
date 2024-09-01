@@ -17,6 +17,18 @@ class ModelData: Encodable {
         return self.labels.first(where: { n in n.id == id })!
     }
 
+    func removeLabel(id: UUID) {
+        for task in self.pendings {
+            task.labelIds.removeAll(where: { $0 == id })
+        }
+        for task in self.dones {
+            task.labelIds.removeAll(where: { $0 == id })
+        }
+        for task in self.routines {
+            task.labelIds.removeAll(where: { $0 == id })
+        }
+        self.labels.removeAll(where: { $0.id == id })
+    }
     func submit() {
         if self.dones.isEmpty {
             return

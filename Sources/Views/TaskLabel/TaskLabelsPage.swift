@@ -14,7 +14,7 @@ private struct TaskLabelsListOr: View {
                             TaskLabelBadge(label: label)
                             Spacer()
                             Button {
-                                self.modelData.labels.removeAll(where: { $0.id == label.id })
+                                self.modelData.removeLabel(id: label.id)
                             } label: {
                                 Image(systemName: "trash")
                             }
