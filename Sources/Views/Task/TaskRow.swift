@@ -5,19 +5,10 @@ struct TaskRow: View {
 
     var body: some View {
         HStack {
-            Button {
-                self.task.isDone.toggle()
-            } label: {
-                Image(systemName: self.task.isDone ? "circle.fill" : "circle")
-            }
-            .buttonStyle(PlainButtonStyle())
-
             Text(self.task.title)
-
             Spacer()
-
-            ForEach(self.task.labels.indices, id: \.self) { i in
-                TaskLabelBadge(label: self.task.labels[i])
+            ForEach(self.task.labels) { label in
+                TaskLabelBadge(label: label)
             }
         }
     }

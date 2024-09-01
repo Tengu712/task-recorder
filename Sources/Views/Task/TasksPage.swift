@@ -1,49 +1,17 @@
 import SwiftUI
 
-private struct TasksListOr: View {
-    @Environment(ModelData.self) private var modelData
-    var tasks: [Task]
-    let alt: String
-
-    var body: some View {
-        ViewOr(flag: self.tasks.isEmpty, alt: self.alt) {
-            List {
-                ForEach(self.tasks) { task in
-                    NavigationLink {
-                        TaskDetail(task: task)
-                    } label: {
-                        TaskRow(task: task)
-                    }
-                }
-                .onMove(perform: self.move)
-            }
-        }
-    }
-
-    private func move(fromOffsets source: IndexSet, toOffset destination: Int) {
-        self.modelData.tasks.move(fromOffsets: source, toOffset: destination)
-    }
-}
-
 struct TasksPage: View {
     @Environment(ModelData.self) private var modelData
 
-    private var pendings: [Task] {
-        return self.modelData.tasks.filter({ n in !n.isDone})
-    }
-
-    private var dones: [Task] {
-        return self.modelData.tasks.filter({ n in n.isDone})
-    }
-
     var body: some View {
+        @Bindable var modelData = self.modelData
         NavigationStack {
             Form {
                 Section(header: Text("Pending")) {
-                    TasksListOr(tasks: self.pendings, alt: "No tasks pending.")
+                    TasksListOr(src: $modelData.pendings, dst: $modelData.dones, icon: "circle", alt: "No tasks pending.")
                 }
                 Section(header: Text("Done")) {
-                    TasksListOr(tasks: self.dones, alt: "No tasks have been done.")
+                    TasksListOr(src: $modelData.dones, dst: $modelData.pendings, icon: "circle.fill", alt: "No tasks have been done.")
                 }
             }
             .formStyle(.grouped)
@@ -52,7 +20,7 @@ struct TasksPage: View {
         .navigationTitle("Tasks")
         .toolbar {
             Button {
-                self.modelData.tasks.append(Task())
+                self.modelData.pendings.append(Task())
             } label: {
                 Image(systemName: "plus")
             }

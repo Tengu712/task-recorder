@@ -3,11 +3,13 @@ import Foundation
 // NOTE: Environmentに利用するため@Observableマクロを適用する。
 @Observable
 class ModelData {
-    var tasks: [Task]
+    var pendings: [Task]
+    var dones: [Task]
     var labels: [TaskLabel]
 
-    init(tasks: [Task], labels: [TaskLabel]) {
-        self.tasks = tasks
+    init(pendings: [Task], dones: [Task], labels: [TaskLabel]) {
+        self.pendings = pendings
+        self.dones = dones
         self.labels = labels
     }
 }
@@ -15,7 +17,8 @@ class ModelData {
 // TODO:
 func loadModelData() -> ModelData {
     return ModelData(
-        tasks: [],
+        pendings: [],
+        dones: [],
         labels: []
     )
 }
