@@ -7,7 +7,7 @@ struct TaskDetail: View {
     private var unattachedLabels: [TaskLabel] {
         return self.modelData.labels.filter({ n in
             !self.task.labels.contains(where: { m in
-                m.title == n.title
+                m.id == n.id
             })
         })
     }
