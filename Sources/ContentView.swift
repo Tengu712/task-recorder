@@ -22,7 +22,14 @@ struct ContentView: View {
                     }
                 }
 
-                // TODO:
+                NavigationLink {
+                    CommentsPage()
+                } label: {
+                    HStack {
+                        Image(systemName: "list.clipboard")
+                        Text("Comments")
+                    }
+                }
             }
             .scrollContentBackground(.hidden)
         } detail: {

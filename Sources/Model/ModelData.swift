@@ -9,6 +9,7 @@ class ModelData: Encodable {
     var labels: [TaskLabel] = []
     var pendings: [Task] = []
     var dones: [Task] = []
+    var comments: String = ""
 
     func getLabel(id: UUID) -> TaskLabel {
         // NOTE: ロード時に整合性を取っているため!を付けて良い。
@@ -41,6 +42,12 @@ class ModelData: Encodable {
                 }
             }
         }
+        if !self.comments.isEmpty {
+            data.append("comments: |-\n".data(using: .utf8)!)
+            for line in self.comments.split(whereSeparator: \.isNewline) {
+                data.append("  \(line)\n".data(using: .utf8)!)
+            }
+        }
 
         // create file
         let dateFormatter = DateFormatter()
@@ -55,6 +62,7 @@ class ModelData: Encodable {
         }
 
         self.dones.removeAll()
+        self.comments = ""
     }
 
     func save() {
@@ -114,6 +122,9 @@ func loadModelData() -> ModelData {
         for n in dones {
             modelData.dones.append(Task.loadFrom(dict: n, labelDict: labelDict))
         }
+    }
+    if let comments = json["_comments"] as? String {
+        modelData.comments = comments
     }
     
     return modelData
