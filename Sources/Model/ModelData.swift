@@ -1,8 +1,11 @@
 import Foundation
 
+private let fileManager = FileManager.default
+private let rootDirectory = NSHomeDirectory() + "/Documents/TaskRecorder"
+
 // NOTE: Environmentに利用するため@Observableマクロを適用する。
 @Observable
-class ModelData {
+class ModelData: Encodable {
     var pendings: [Task]
     var dones: [Task]
     var labels: [TaskLabel]
@@ -17,8 +20,6 @@ class ModelData {
         if self.dones.isEmpty {
             return
         }
-
-        let fileManager = FileManager.default
 
         // create data
         var data = Data()
@@ -42,16 +43,6 @@ class ModelData {
             }
         }
 
-        // create directory
-        let rootDirectory = NSHomeDirectory() + "/Documents/TaskRecorder"
-        if !fileManager.fileExists(atPath: rootDirectory) {
-            do {
-                try fileManager.createDirectory(atPath: rootDirectory, withIntermediateDirectories: false, attributes: nil)
-            } catch _ {
-                // TODO: show error message
-            }
-        }
-
         // create file
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyyMMdd-HHmm"
@@ -66,13 +57,64 @@ class ModelData {
 
         self.dones.removeAll()
     }
+
+    func save() {
+        let encoder = JSONEncoder()
+        guard let data = try? encoder.encode(self) else {
+            // TODO: show error message
+            return
+        }
+        if !FileManager.default.createFile(
+            atPath: rootDirectory + "/ModelData.json",
+            contents: data,
+            attributes: nil)
+        {
+            // TODO: show error message
+            return
+        }
+    }
 }
 
-// TODO:
 func loadModelData() -> ModelData {
-    return ModelData(
-        pendings: [],
-        dones: [],
-        labels: []
-    )
+    let modelData = ModelData(pendings: [], dones: [], labels: [])
+
+    // create directory
+    if !fileManager.fileExists(atPath: rootDirectory) {
+        do {
+            try fileManager.createDirectory(atPath: rootDirectory, withIntermediateDirectories: false, attributes: nil)
+        } catch _ {
+            // TODO: show error message
+        }
+    }
+
+    // if ModelData.json not found
+    if !fileManager.fileExists(atPath: rootDirectory + "/ModelData.json") {
+        return modelData
+    }
+    // load ModelData.json as Data
+    guard let data = try? Data(contentsOf: URL(fileURLWithPath:rootDirectory + "/ModelData.json")) else {
+        return modelData
+    }
+    // load ModelData.json as [:]
+    guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
+        return modelData
+    }
+
+    if let pendings = json["_pendings"] as? [[String: Any]] {
+        for n in pendings {
+            modelData.pendings.append(Task.loadFrom(dict: n))
+        }
+    }
+    if let dones = json["_dones"] as? [[String: Any]] {
+        for n in dones {
+            modelData.dones.append(Task.loadFrom(dict: n))
+        }
+    }
+    if let labels = json["_labels"] as? [[String: Any]] {
+        for n in labels {
+            modelData.labels.append(TaskLabel.loadFrom(dict: n))
+        }
+    }
+    
+    return modelData
 }

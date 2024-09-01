@@ -11,15 +11,10 @@ struct TaskLabelDetail: View {
 
             Section(header: Text("Settings")) {
                 TextField("Title", text: self.$label.title, prompt: Text("Label title..."))
-                Picker("Color", selection: self.$label.color) {
-                    Text("Blue").tag(Color.blue)
-                    Text("Cyan").tag(Color.cyan)
-                    Text("Gray").tag(Color.gray)
-                    Text("Green").tag(Color.green)
-                    Text("Indigo").tag(Color.indigo)
-                    Text("Orange").tag(Color.orange)
-                    Text("Red").tag(Color.red)
-                    Text("Yellow").tag(Color.yellow)
+                Picker("Color", selection: self.$label.colorKey) {
+                    ForEach(COLOR_KEYS, id: \.self) { key in
+                        Text(key).tag(key)
+                    }
                 }
             }
         }

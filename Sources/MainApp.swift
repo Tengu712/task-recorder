@@ -19,6 +19,10 @@ struct MainApp: App {
         WindowGroup {
             ContentView()
                 .environment(self.modelData)
+                // NOTE: ウィンドウが閉じられたときにmodelDataを保存する
+                .onReceive(NotificationCenter.default.publisher(for: NSWindow.willCloseNotification)) { _ in
+                    self.modelData.save()
+                }
         }
     }
 }
