@@ -20,6 +20,11 @@ struct TasksPage: View {
         .navigationTitle("Tasks")
         .toolbar {
             Button {
+                self.modelData.submit()
+            } label: {
+                Image(systemName: "paperplane")
+            }
+            Button {
                 self.modelData.pendings.append(Task())
             } label: {
                 Image(systemName: "plus")
