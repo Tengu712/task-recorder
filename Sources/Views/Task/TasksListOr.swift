@@ -10,20 +10,10 @@ struct TasksListOr: View {
         ViewOr(flag: self.src.isEmpty, alt: self.alt) {
             List {
                 ForEach(self.src) { task in
-                    HStack {
-                        Button {
-                            src.removeAll(where: { $0.id == task.id })
-                            dst.append(task)
-                        } label: {
-                            Image(systemName: self.icon)
-                        }
-                        .buttonStyle(PlainButtonStyle())
-
-                        NavigationLink {
-                            TaskDetail(task: task)
-                        } label: {
-                            TaskRow(task: task)
-                        }
+                    NavigationLink {
+                        TaskDetail(task: task)
+                    } label: {
+                        TaskRow(task: task, src: self.$src, dst: self.$dst, icon: self.icon)
                     }
                 }
                 .onMove(perform: self.move)
