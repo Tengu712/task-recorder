@@ -39,6 +39,15 @@ struct ContentView: View {
                         Text("Routines")
                     }
                 }
+
+                NavigationLink {
+                    FilesPage()
+                } label: {
+                    HStack {
+                        Image(systemName: "folder")
+                        Text("Files")
+                    }
+                }
             }
             .scrollContentBackground(.hidden)
         } detail: {
